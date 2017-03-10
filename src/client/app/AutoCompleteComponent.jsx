@@ -10,7 +10,7 @@ class DropdownRow extends React.Component {
     cssClass = cssClass + (this.props.isActive === true ? " Active" : "");
     return (
 
-      <li class={cssClass}>{this.props.resultText}</li>
+      <li className={cssClass}>{this.props.resultText}</li>
 
     );
 
@@ -29,7 +29,7 @@ class DropdownComponent extends React.Component {
     this.props.results.forEach((result, index) => {
 
       isActive = this.props.currentIndex === index;
-      rows.push(<DropdownRow class="list-group" isActive={isActive} resultText={result.city}/>);
+      rows.push(<DropdownRow className="list-group" isActive={isActive} resultText={result.city}/>);
 
     });
 
@@ -135,8 +135,8 @@ class AutoCompleteComponent extends React.Component{
 
   // "if you dont use something in render, it shouldnt be in the state"
   render() {
-
-    let searchText = this.state.currentIndex === -1 ? this.state.searchText : this.props.listings[this.state.currentIndex];
+    //TODO: make this false result generic 
+    let searchText = this.state.currentIndex === -1 ? this.state.searchText : this.state.results[this.state.currentIndex].city;
 
     return (
 

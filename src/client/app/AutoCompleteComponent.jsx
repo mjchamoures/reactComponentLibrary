@@ -1,19 +1,19 @@
 import React from 'react';
 import Fetch from 'react-fetch'
+import { FormControl } from 'react-bootstrap';
+import { FormGroup } from 'react-bootstrap';
+import { ListGroup } from 'react-bootstrap';
+import { ListGroupItem } from 'react-bootstrap';
+import { ControlLabel } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
 
 class DropdownRow extends React.Component {
 
 
   render() {
-    //TODO: figure out how to add a class based on active or not
-    let cssClass = "list-group-item";
-    cssClass = cssClass + (this.props.isActive === true ? " Active" : "");
-    return (
-
-      <li className={cssClass}>{this.props.resultText}</li>
-
-    );
-
+    let row = this.props.isActive ? <ListGroupItem active>{this.props.resultText}</ListGroupItem> : <ListGroupItem >{this.props.resultText}</ListGroupItem>;
+    
+    return (row);
   }
 
 }
@@ -29,14 +29,14 @@ class DropdownComponent extends React.Component {
     this.props.results.forEach((result, index) => {
 
       isActive = this.props.currentIndex === index;
-      rows.push(<DropdownRow className="list-group" isActive={isActive} resultText={result.city}/>);
+      rows.push(<DropdownRow isActive={isActive} resultText={result.city}/>);
 
     });
 
     return (
-      <ul>
+      <ListGroup>
       {rows}
-      </ul>
+      </ListGroup>
     );
 
   }
@@ -68,7 +68,7 @@ class SearchTextComponent extends React.Component {
   render() {
     let text = this.props.searchText;
     return (
-      <input type="text" value={text} onKeyUp={this.handleKeyup} onChange={this.handleChange}  />
+      <FormControl type="text" value={text} onKeyUp={this.handleKeyup} onChange={this.handleChange}  />
     );
   };
 
@@ -140,13 +140,18 @@ class AutoCompleteComponent extends React.Component{
 
     return (
 
-      <div>
-        Enter Search Text:
-        <SearchTextComponent searchText={searchText} keyupEventHandler={this.keyupEventHandler} />
+      <FormGroup >
+        <Col xs={12}>
+          <Col xs={3}>
+            <ControlLabel>Enter Search Text:</ControlLabel>
+          </Col>
+          <Col xs={4}>
+            <SearchTextComponent searchText={searchText} keyupEventHandler={this.keyupEventHandler} />
 
-        <DropdownComponent results={this.state.results} currentIndex={this.state.currentIndex} /> 
-      
-      </div>
+            <DropdownComponent results={this.state.results} currentIndex={this.state.currentIndex} /> 
+          </Col>
+        </Col>
+      </FormGroup>
 
     );
 

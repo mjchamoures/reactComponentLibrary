@@ -1,15 +1,22 @@
 import React from 'react';
 import AwesomeComponent from './AwesomeComponent.jsx';
 import AutoCompleteComponent from './AutoCompleteComponent.jsx';
+import TicTacToeGameComponent from './TicTacToeGameComponent.jsx';
 import {render} from 'react-dom';
 
 class App extends React.Component {
   render() {
     return (
       <div>
-        <p> Hello React! </p>
-        <AwesomeComponent />
-        <AutoCompleteComponent />
+        <div>
+          <p> Hello React! </p>
+          <AwesomeComponent />
+          <AutoCompleteComponent />
+        </div>
+
+        <div>
+          <TicTacToeGameComponent />
+        </div>
       </div>
     );
   }

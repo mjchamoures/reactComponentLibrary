@@ -2,6 +2,7 @@ import React from 'react';
 import AwesomeComponent from './AwesomeComponent.jsx';
 import AutoCompleteComponent from './AutoCompleteComponent.jsx';
 import TicTacToeGameComponent from './TicTacToeGameComponent.jsx';
+import StarRatingComponent from './StarRatingComponent.jsx';
 import {render} from 'react-dom';
 
 class App extends React.Component {
@@ -16,6 +17,10 @@ class App extends React.Component {
 
         <div>
           <TicTacToeGameComponent />
+        </div>
+
+        <div>
+          <StarRatingComponent numStars={5} numFilled={2} name={"Fun Level"}/>
         </div>
       </div>
     );

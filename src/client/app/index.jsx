@@ -3,6 +3,7 @@ import AwesomeComponent from './AwesomeComponent.jsx';
 import AutoCompleteComponent from './AutoCompleteComponent.jsx';
 import TicTacToeGameComponent from './TicTacToeGameComponent.jsx';
 import StarRatingComponent from './StarRatingComponent.jsx';
+import TexasHoldEmComponent from './TexasHoldEmComponent.jsx';
 import {render} from 'react-dom';
 
 class App extends React.Component {
@@ -21,6 +22,10 @@ class App extends React.Component {
 
         <div>
           <StarRatingComponent numStars={5} numFilled={2} name={"Fun Level"}/>
+        </div>
+
+        <div>
+          <TexasHoldEmComponent handSize={5} />
         </div>
       </div>
     );

@@ -51,9 +51,33 @@ class CardSet extends React.Component {
 };
 
 
+class Player extends React.Component {
 
 
-class Game extends React.Component {
+  render() {
+    let foldButtonStyle = {
+      margin : "10px",
+    };
+
+    return (
+      
+      <div>
+        <label>Player {this.props.name}</label>
+        <button style={foldButtonStyle} onClick={() => this.props.onFoldClick()}>Fold</button>
+        <CardSet cards={this.props.cards} />
+      </div>
+
+    );
+
+  }
+
+
+}; 
+
+
+
+
+class Board extends React.Component {
 
   // no state for now...could add bets/winner later 
   
@@ -85,7 +109,9 @@ class Game extends React.Component {
     let players = [];
 
     for(let i = 0; i < this.props.playersCards.length; i++) {
-      players.push(<div key={i}><label>Player {i}</label><CardSet cards={this.props.playersCards[i]} /></div>);
+      if(this.props.playersCards[i].length > 0) {
+        players.push(<Player key={i} onFoldClick={() => this.props.onFoldClick(i)} name={i} cards={this.props.playersCards[i]} />);
+      }
     }
 
     let divStyle = {
@@ -212,6 +238,17 @@ class TexasHoldEmComponent extends React.Component {
 
   }
 
+  handleFoldClick(playerNumber) {
+
+    let playersCards= this.state.playersCards.slice();
+    playersCards[playerNumber] = [];
+
+    this.setState({
+      playersCards : playersCards,
+    });
+
+  }
+
   render() {
 
     const boardDivStyle = {
@@ -237,9 +274,10 @@ class TexasHoldEmComponent extends React.Component {
           onClick={() => this.handleDealClick()}
         />
 
-        <Game 
+        <Board 
           playersCards={this.state.playersCards} 
           flopTurnRiverCards={this.state.flopTurnRiverCards} 
+          onFoldClick={(i) => this.handleFoldClick(i)}
         />
 
       </div>

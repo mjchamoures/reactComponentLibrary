@@ -25,7 +25,7 @@ class App extends React.Component {
         </div>
 
         <div>
-          <TexasHoldEmComponent handSize={5} />
+          <TexasHoldEmComponent numPlayers={2} />
         </div>
       </div>
     );

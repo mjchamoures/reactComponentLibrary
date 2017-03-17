@@ -28,9 +28,9 @@ class CardSet extends React.Component {
       const divStyle = {
         color: (currentCard[0] === 'Club' || currentCard[0] === 'Spade') ? 'black' : 'red',
         backgroundColor: 'white',
-        width: '150px',
+        width: '75px',
         margin: '20px',
-        height: '200px',
+        height: '100px',
         display: 'inline-block',
         padding: '10px',
         textAlign: 'right',
@@ -51,18 +51,87 @@ class CardSet extends React.Component {
 };
 
 
-// Dealer component that handles the clicking of dealer button and calling back to parent if cards run out, or after each hand
-class Dealer extends React.Component {
+
+
+class Game extends React.Component {
+
+  // no state for now...could add bets/winner later 
+  
+
+  getFlopTurnRiverLabel() {
+    let label = "";
+
+    switch(this.props.flopTurnRiverCards.length) {
+
+      case 3 :
+        label = "The Flop...";
+        break;
+      case 4 :
+        label = "The Flop, the Turn...";
+        break;
+      case 5 :
+        label = "The Flop, the Turn, and the RIVER!";
+        break;
+      default :
+        label = "";
+        break; 
+    }
+
+    return label;
+  }
 
   render() {
 
+    let players = [];
+
+    for(let i = 0; i < this.props.playersCards.length; i++) {
+      players.push(<div key={i}><label>Player {i}</label><CardSet cards={this.props.playersCards[i]} /></div>);
+    }
+
+    let divStyle = {
+        margin: "10px",
+    };
+
+    let label = this.getFlopTurnRiverLabel();
+  
     return (
-      <button onClick={() => this.props.onClick()}>Deal Cards</button>
+      <div style={divStyle}>
+        <div>
+          <label>{label}</label>
+          <CardSet cards={this.props.flopTurnRiverCards} />   
+        </div>
+
+        <div>
+          {players}
+        </div>
+      </div>  
     );
 
   }
 
 }
+
+
+// Dealer component that handles the clicking of dealer button and calling back to parent if cards run out, or after each hand
+class Dealer extends React.Component {
+
+  render() {
+
+    let divStyle = {
+        margin: "10px",
+    };
+
+    return (
+      <div style={divStyle}>
+        <button onClick={() => this.props.onClick()}>Deal Cards</button>
+      </div>
+    );
+
+  }
+
+}
+
+
 
 // parent component that handles new games, and the state of the cards/game
 class TexasHoldEmComponent extends React.Component {
@@ -70,45 +139,109 @@ class TexasHoldEmComponent extends React.Component {
   constructor() {
     super();
 
+    // props will include numPlayers
+
+    let currentCardDeck = this.getFreshDeck();
+
     this.state = {
-      cardDeck : [],
-      currentCards : [],
+      cardDeck : currentCardDeck,
+      playersCards : [],
+      flopTurnRiverCards : [],
     };
   }
 
   handleDealClick() {
 
+    // current state tracking
     let currentCardDeck = this.state.cardDeck.slice();
-    
-    // if the deck doesn't have enough cards for a full hand, reshuffle whole deck before picking 5 new ones
-    if(currentCardDeck.length < this.props.handSize) {
-      // reshuffle deck
-      currentCardDeck = this.getFreshDeck();      
-    } 
+    let playersCards = this.state.playersCards.slice();
+    let flopTurnRiverCards = this.state.flopTurnRiverCards.slice();
 
-    const newCards = currentCardDeck.slice(0, this.props.handSize);
+    // check if players cards have been dealt yet
+    if(playersCards.length === 0) {
+      // deal theirs...each player gets two cards for t holdem
+      for(let i=0; i < 2; i++) {
+        for(let j = 0; j < this.props.numPlayers; j++) {
+          if(i === 0) {
+            playersCards.push([]);
+          }
+          playersCards[j].push(currentCardDeck.pop());
+        }
+      }
+    } else {
 
-    const remainingCards = this.state.cardDeck.slice(this.props.handSize-1, this.state.cardDeck.length);
-    
+      switch(flopTurnRiverCards.length) {
+
+        case 0 : 
+          while(flopTurnRiverCards.length < 3) {
+            flopTurnRiverCards.push(currentCardDeck.pop());
+          }
+          break;
+        case 3 :
+          while(flopTurnRiverCards.length < 4) {
+            flopTurnRiverCards.push(currentCardDeck.pop());
+          }
+          break;
+        case 4 :
+          while(flopTurnRiverCards.length < 5) {
+            flopTurnRiverCards.push(currentCardDeck.pop());
+          }
+          break;
+        default :
+          // this hand is over...disable deal button and declare winner or something
+          break; 
+
+      }
+
+    }
+
     this.setState({
-      cardDeck : remainingCards,
-      currentCards : newCards,
+      cardDeck : currentCardDeck,
+      playersCards : playersCards,
+      flopTurnRiverCards : flopTurnRiverCards,
     });
+  }
+
+  handleNewGameClick() {
+    // forcing a re-render to start over a new game
+    this.setState({
+      cardDeck : this.getFreshDeck(),
+      playersCards : [],
+      flopTurnRiverCards : [],
+    });
+
   }
 
   render() {
 
     const boardDivStyle = {
       backgroundColor : 'green',
-      height: '400px',
+      height: '800px',
       width: '75%',
+    };
+
+    const newGameDivStyle = {
+      margin : "10px",
     };
 
     return (
 
       <div style={boardDivStyle}>
-        <Dealer onClick={() => this.handleDealClick()} />
-        <CardSet cards={this.state.currentCards} />  
+
+        <div style={newGameDivStyle}>
+          <button onClick={() => this.handleNewGameClick()}>New Game</button>
+        </div>
+
+        <Dealer 
+          numPlayers={this.props.numPlayers} 
+          onClick={() => this.handleDealClick()}
+        />
+
+        <Game 
+          playersCards={this.state.playersCards} 
+          flopTurnRiverCards={this.state.flopTurnRiverCards} 
+        />
+
       </div>
 
     );

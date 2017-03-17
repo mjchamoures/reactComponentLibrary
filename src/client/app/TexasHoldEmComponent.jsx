@@ -1,14 +1,16 @@
 import React from 'react';
-
+import { FormControl } from 'react-bootstrap';
+import { Col } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
+import { ControlLabel } from 'react-bootstrap';
+import { FormGroup } from 'react-bootstrap';
 
 
 // child component for card
 function Card(props) {
 
   return (
-
-    <div style={props.style}>{props.card[1]} of {props.card[0]}</div>
-
+    <div style={props.style}>{props.card[1]} of {props.card[0]}</div> 
   );
 
 };
@@ -29,10 +31,10 @@ class CardSet extends React.Component {
         color: (currentCard[0] === 'Club' || currentCard[0] === 'Spade') ? 'black' : 'red',
         backgroundColor: 'white',
         width: '75px',
-        margin: '20px',
+        margin: '10px',
         height: '100px',
-        display: 'inline-block',
         padding: '10px',
+        display : 'inline-block',
         textAlign: 'right',
       };
 
@@ -41,9 +43,9 @@ class CardSet extends React.Component {
 
 
     return (
-      <div>
+      <Col xs={12}>
         {cards}
-      </div>  
+      </Col>  
     );
 
   }
@@ -55,17 +57,21 @@ class Player extends React.Component {
 
 
   render() {
-    let foldButtonStyle = {
-      margin : "10px",
-    };
-
     return (
       
-      <div>
-        <label>Player {this.props.name}</label>
-        <button style={foldButtonStyle} onClick={() => this.props.onFoldClick()}>Fold</button>
+      <Col xs={4}>
+        <Col xs={12}>
+          <Col xs={4}>
+            <ControlLabel>Player {this.props.name}</ControlLabel>
+          </Col>  
+          <Col xs={2}>
+            <Button onClick={() => this.props.onFoldClick()}>Fold</Button>
+          </Col>
+        </Col>
+        
         <CardSet cards={this.props.cards} />
-      </div>
+      
+      </Col>
 
     );
 
@@ -110,27 +116,23 @@ class Board extends React.Component {
 
     for(let i = 0; i < this.props.playersCards.length; i++) {
       if(this.props.playersCards[i].length > 0) {
-        players.push(<Player key={i} onFoldClick={() => this.props.onFoldClick(i)} name={i} cards={this.props.playersCards[i]} />);
+        players.push(<Player key={i} onFoldClick={() => this.props.onFoldClick(i)} name={i+1} cards={this.props.playersCards[i]} />);
       }
     }
-
-    let divStyle = {
-        margin: "10px",
-    };
 
     let label = this.getFlopTurnRiverLabel();
   
     return (
-      <div style={divStyle}>
-        <div>
-          <label>{label}</label>
+      <Col xs={12}>
+        <Col xs={12}>
+          <ControlLabel>{label}</ControlLabel>
           <CardSet cards={this.props.flopTurnRiverCards} />   
-        </div>
+        </Col>
 
-        <div>
+        <Col xs={12}>
           {players}
-        </div>
-      </div>  
+        </Col>
+      </Col>  
     );
 
   }
@@ -148,9 +150,9 @@ class Dealer extends React.Component {
     };
 
     return (
-      <div style={divStyle}>
-        <button onClick={() => this.props.onClick()}>Deal Cards</button>
-      </div>
+      <Col xs={12}>
+        <Button onClick={() => this.props.onClick()}>Deal Cards</Button>
+      </Col>
     );
 
   }
@@ -173,6 +175,7 @@ class TexasHoldEmComponent extends React.Component {
       cardDeck : currentCardDeck,
       playersCards : [],
       flopTurnRiverCards : [],
+      numPlayers : 2,
     };
   }
 
@@ -187,7 +190,7 @@ class TexasHoldEmComponent extends React.Component {
     if(playersCards.length === 0) {
       // deal theirs...each player gets two cards for t holdem
       for(let i=0; i < 2; i++) {
-        for(let j = 0; j < this.props.numPlayers; j++) {
+        for(let j = 0; j < this.state.numPlayers; j++) {
           if(i === 0) {
             playersCards.push([]);
           }
@@ -249,6 +252,17 @@ class TexasHoldEmComponent extends React.Component {
 
   }
 
+
+  handleNumPlayerInputChange(event) {
+
+    let numPlayers = event.target.value;
+
+    this.setState({
+      numPlayers : numPlayers,
+    });
+
+  }
+
   render() {
 
     const boardDivStyle = {
@@ -264,21 +278,28 @@ class TexasHoldEmComponent extends React.Component {
     return (
 
       <div style={boardDivStyle}>
-
-        <div style={newGameDivStyle}>
-          <button onClick={() => this.handleNewGameClick()}>New Game</button>
-        </div>
-
-        <Dealer 
-          numPlayers={this.props.numPlayers} 
-          onClick={() => this.handleDealClick()}
-        />
-
-        <Board 
-          playersCards={this.state.playersCards} 
-          flopTurnRiverCards={this.state.flopTurnRiverCards} 
-          onFoldClick={(i) => this.handleFoldClick(i)}
-        />
+        <FormGroup >
+          <Col xs={12}>
+            <Col xs={2}>  
+              <Button onClick={() => this.handleNewGameClick()}>New Game</Button>
+            </Col>
+            <Col xs={4}>
+              <FormControl type="text"  value={this.state.numPlayers} onChange={(e) => this.handleNumPlayerInputChange(e)} placeholder="Enter Number of Players" />
+            </Col>
+          </Col>
+        </FormGroup>
+        <FormGroup >
+          <Dealer  
+            onClick={() => this.handleDealClick()}
+          />
+        </FormGroup>
+        <FormGroup >
+          <Board 
+            playersCards={this.state.playersCards} 
+            flopTurnRiverCards={this.state.flopTurnRiverCards} 
+            onFoldClick={(i) => this.handleFoldClick(i)}
+          />
+        </FormGroup>
 
       </div>
 

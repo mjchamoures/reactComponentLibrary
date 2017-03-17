@@ -14,8 +14,8 @@ function Card(props) {
 };
 
 
-// child component for hand
-class CardHand extends React.Component {
+// child component for a set of cards..could be a hand or could be etc/flop/river
+class CardSet extends React.Component {
 
   render() {
 
@@ -51,7 +51,20 @@ class CardHand extends React.Component {
 };
 
 
-// parent game component to be exported
+// Dealer component that handles the clicking of dealer button and calling back to parent if cards run out, or after each hand
+class Dealer extends React.Component {
+
+  render() {
+
+    return (
+      <button onClick={() => this.props.onClick()}>Deal Cards</button>
+    );
+
+  }
+
+}
+
+// parent component that handles new games, and the state of the cards/game
 class TexasHoldEmComponent extends React.Component {
 
   constructor() {
@@ -85,17 +98,17 @@ class TexasHoldEmComponent extends React.Component {
 
   render() {
 
-    const divStyle = {
+    const boardDivStyle = {
       backgroundColor : 'green',
       height: '400px',
       width: '75%',
-    }  
+    };
 
     return (
 
-      <div style={divStyle}>
-        <button onClick={() => this.handleDealClick()}>Deal Cards</button>
-        <CardHand cards={this.state.currentCards} />  
+      <div style={boardDivStyle}>
+        <Dealer onClick={() => this.handleDealClick()} />
+        <CardSet cards={this.state.currentCards} />  
       </div>
 
     );
@@ -135,6 +148,11 @@ class TexasHoldEmComponent extends React.Component {
   }
 
 }
+
+
+
+
+
 
 
 export default TexasHoldEmComponent;

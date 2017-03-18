@@ -4,6 +4,7 @@ import AutoCompleteComponent from './AutoCompleteComponent.jsx';
 import TicTacToeGameComponent from './TicTacToeGameComponent.jsx';
 import StarRatingComponent from './StarRatingComponent.jsx';
 import InputWithLabelComponent from './coreComponents/InputWithLabelComponent.jsx';
+import ButtonComponent from './coreComponents/ButtonComponent.jsx';
 import {render} from 'react-dom';
 
 class App extends React.Component {
@@ -31,6 +32,35 @@ class App extends React.Component {
             inputColWidth={9}
             placeholder={"eg. San Francisco"}
             onChange={() => {console.log("hey")}}
+          />
+        </div>
+        <div>
+          <ButtonComponent
+            size={"sm"}
+            type={"primary"}
+            onClick={() => {console.log("you clicked me")}}
+            disabled={false}
+            text={"Primary"}
+          />
+          <ButtonComponent
+            size={"sm"}
+            type={"default"}
+            onClick={() => {console.log("you clicked me")}}
+            disabled={false}
+            text={"Default"}
+          />
+          <ButtonComponent
+            size={"sm"}
+            onClick={() => {console.log("you clicked me")}}
+            disabled={false}
+            text={"Default 2"}
+          />
+          <ButtonComponent
+            size={"md"}
+            type={"warning"}
+            onClick={() => {console.log("you clicked me")}}
+            disabled={false}
+            text={"Warning Medium"}
           />
         </div>
       </div>

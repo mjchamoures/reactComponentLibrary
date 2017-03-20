@@ -5,6 +5,7 @@ import TicTacToeGameComponent from './TicTacToeGameComponent.jsx';
 import StarRatingComponent from './StarRatingComponent.jsx';
 import InputWithLabelComponent from './coreComponents/InputWithLabelComponent.jsx';
 import ButtonComponent from './coreComponents/ButtonComponent.jsx';
+import TexasHoldEmComponent from './TexasHoldEmComponent.jsx';
 import {render} from 'react-dom';
 
 class App extends React.Component {
@@ -25,6 +26,10 @@ class App extends React.Component {
           <StarRatingComponent numStars={5} numFilled={2} name={"Fun Level"}/>
         </div>
 
+        <div>
+          <TexasHoldEmComponent />
+        </div>  
+        
         <div>
           <InputWithLabelComponent
             label = {"Enter City:"}
